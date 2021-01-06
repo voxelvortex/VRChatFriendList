@@ -5,10 +5,13 @@ Author: VoxelVortex (Michael)
 VRCatFriendList > VRChatAdapter.py
 """
 
-import vrcpy, json
+import vrcpy
+import json
 
 
 def login(json_file):
+    # Creates a valid session with the VRChat API
+
     login_info = None
     with open(json_file, 'r') as login_info_file:
         login_info = json.load(login_info_file)
@@ -23,6 +26,32 @@ def login(json_file):
     code = input("Please enter your 2FA token: ")
     client.verify2fa(code)
 
-    print(client)
+    return client
 
+
+def logout(client):
+    # Closes a valid session with the VRChat API
     client.logout()
+
+
+def fetch_online_friends(client):
+    friends_list = client.fetch_friends()
+    return parse_friends_list(friends_list)
+
+
+def fetch_full_online_friends(client):
+    friends_list = client.fetch_full_friends()
+    return parse_friends_list(friends_list)
+
+
+def parse_friends_list(friends_list):
+    friends_list_dict = {"friends": []}
+
+    for friend in friends_list:
+        friends_list_dict["friends"].append(
+            {"displayName": friend.displayName,
+            "status": friend.status,
+            "last_platform": friend.last_platform
+        })
+
+    return friends_list_dict
