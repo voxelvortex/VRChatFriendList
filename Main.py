@@ -9,13 +9,16 @@ import VRChatAdapter
 
 
 def main():
+    user_in = ""
     client = VRChatAdapter.login('login_info.json')
 
-    friends = VRChatAdapter.fetch_online_friends(client)
+    while user_in.strip() == "":
+        friends = VRChatAdapter.fetch_online_friends(client)
+
+        print_friends(friends)
+        user_in = input("Press ENTER to continue, or type QUIT to quit: ")
 
     VRChatAdapter.logout(client)
-
-    print_friends(friends)
 
 
 def print_friends(friends):
